@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ExcelFórmula AI</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f2f2f2;
+      padding: 2rem;
+      text-align: center;
+    }
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      background: white;
+      padding: 2rem;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+    input[type="text"] {
+      width: 100%;
+      padding: 1rem;
+      margin-top: 1rem;
+      margin-bottom: 1rem;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
+    button {
+      padding: 0.75rem 1.5rem;
+      background: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #45a049;
+    }
+    #output {
+      margin-top: 2rem;
+      padding: 1rem;
+      background: #e8f5e9;
+      border-left: 5px solid #4CAF50;
+      border-radius: 6px;
+      white-space: pre-wrap;
+    }
+    footer {
+      margin-top: 3rem;
+      font-size: 0.9rem;
+      color: #888;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>📊 ExcelFórmula AI</h1>
+    <p>Escribe lo que necesitas y genera fórmulas para Excel al instante.</p>
+    <input id="input" type="text" placeholder="Ejemplo: Necesito una fórmula para E1 que sume A1 y B1 si C1 es mayor a 5">
+    <button onclick="generateFormula()">Generar fórmula</button>
+    <div id="output"></div>
+  </div>
+  <footer>
+    Versión gratuita: 3 usos al día | <strong><a href="#">Premium ilimitado</a></strong>
+  </footer>
+
+  <script>
+    async function generateFormula() {
+      const input = document.getElementById('input').value;
+      const output = document.getElementById('output');
+
+      if (!input.trim()) {
+        output.innerText = 'Por favor escribe una descripción de lo que necesitas.';
+        return;
+      }
+
+      output.innerText = 'Generando fórmula, por favor espera...';
+
+      try {
+        const res = await fetch('/api/formula', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ message: input })
+        });
+
+        const data = await res.json();
+        output.innerText = `Resultado para: "${input}"\n\nFórmula sugerida:\n${data.formula}`;
+      } catch (err) {
+        output.innerText = 'Error al generar la fórmula.';
+      }
+    }
+  </script>
+</body>
+</html>
