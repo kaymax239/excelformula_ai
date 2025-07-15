@@ -2,11 +2,46 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Excel Fórmula AI</title>
 </head>
 <body>
   <h1>Bienvenido, Víctor Manuel</h1>
   <p>Tu app para convertir fórmulas de Excel está en construcción.</p>
+
+  <form id="formulaForm">
+    <label for="inputFormula">Escribe tu fórmula de Excel (en inglés o español):</label><br>
+    <input type="text" id="inputFormula" name="inputFormula" required />
+    <button type="submit">Convertir</button>
+  </form>
+
+  <h3>Fórmula Convertida:</h3>
+  <pre id="output"></pre>
+
+  <script>
+    document.getElementById('formulaForm').addEventListener('submit', async function (e) {
+      e.preventDefault();
+      const formula = document.getElementById('inputFormula').value;
+      const output = document.getElementById('output');
+
+      output.textContent = 'Convirtiendo...';
+
+      const response = await fetch('/api/formula', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ formula })
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        output.textContent = data.result;
+      } else {
+        output.textContent = 'Error: ' + (data.error || 'No se pudo procesar la fórmula');
+      }
+    });
+  </script>
 </body>
 </html>
